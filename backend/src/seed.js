@@ -8,6 +8,7 @@ async function seed() {
       {
         name: 'Арена Альфа',
         description: 'Современное крытое поле с искусственным покрытием',
+        city: 'Алматы',
         size: '40×20',
         surface: 'Искусственная трава',
         lighting: true,
@@ -18,6 +19,7 @@ async function seed() {
       {
         name: 'Арена Бета',
         description: 'Открытое поле с натуральным газоном',
+        city: 'Алматы',
         size: '50×30',
         surface: 'Натуральная трава',
         lighting: true,
@@ -28,6 +30,7 @@ async function seed() {
       {
         name: 'Арена Гамма',
         description: 'Крытый мини-футбольный зал',
+        city: 'Алматы',
         size: '30×15',
         surface: 'Паркет',
         lighting: true,
@@ -38,12 +41,24 @@ async function seed() {
       {
         name: 'Арена Дельта',
         description: 'VIP-поле с трибунами и раздевалками',
+        city: 'Алматы',
         size: '60×40',
         surface: 'Искусственная трава 5-го поколения',
         lighting: true,
         capacity: 22,
         pricePerHour: 15000,
         photos: JSON.stringify(['/photos/delta1.jpg', '/photos/delta2.jpg', '/photos/delta3.jpg'])
+      },
+      {
+        name: 'Air Arena',
+        description: 'Современное футбольное поле в г. Астана',
+        city: 'Астана',
+        size: '40×20',
+        surface: 'Искусственная трава',
+        lighting: true,
+        capacity: 10,
+        pricePerHour: 10000,
+        photos: JSON.stringify(['/photos/air-arena1.jpg', '/photos/air-arena2.jpg', '/photos/air-arena3.jpg'])
       }
     ]
   })

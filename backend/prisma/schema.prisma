@@ -25,6 +25,7 @@ model Arena {
   id           String  @id @default(cuid())
   name         String
   description  String?
+  city         String  @default("Алматы")
   size         String
   surface      String
   lighting     Boolean @default(true)

@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { MessageSquare, Instagram, Globe, RefreshCw } from 'lucide-react'
+import { MessageSquare, Globe, RefreshCw, Camera } from 'lucide-react'
 import { api } from '@/lib/api'
 
 interface BotMsg { id: string; channel: string; senderId: string; message: string; response?: string; createdAt: string }
 
-const CHANNEL_ICONS: Record<string, any> = { whatsapp: MessageSquare, instagram: Instagram, site: Globe }
+const CHANNEL_ICONS: Record<string, any> = { whatsapp: MessageSquare, instagram: Camera, site: Globe }
 const CHANNEL_COLORS: Record<string, string> = {
   whatsapp: 'text-green-400 bg-green-400/10',
   instagram: 'text-pink-400 bg-pink-400/10',
@@ -42,7 +42,7 @@ export default function BotsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           { key: 'whatsapp', icon: MessageSquare, label: 'WhatsApp Business', status: 'Настройка через .env', color: 'text-green-400' },
-          { key: 'instagram', icon: Instagram, label: 'Instagram DM', status: 'Настройка через .env', color: 'text-pink-400' },
+          { key: 'instagram', icon: Camera, label: 'Instagram DM', status: 'Настройка через .env', color: 'text-pink-400' },
           { key: 'site', icon: Globe, label: 'Сайт-виджет', status: 'Активен', color: 'text-[#B5F23A]' },
         ].map(b => (
           <div key={b.key} className="bg-[#1A3A1A] border border-[#2A4A2A] rounded-2xl p-5">

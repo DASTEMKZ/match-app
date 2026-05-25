@@ -18,7 +18,7 @@ export default function ClientsPage() {
   const [search, setSearch] = useState('')
   const [tag, setTag] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [newUser, setNewUser] = useState({ name: '', phone: '', tag: 'FAN', instagram: '' })
+  const [newUser, setNewUser] = useState<{ name: string; phone: string; tag: 'FAN'|'TEAM'|'CORPORATE'|'TOURNAMENT'; instagram: string }>({ name: '', phone: '', tag: 'FAN', instagram: '' })
 
   const load = () => {
     setLoading(true)
@@ -75,7 +75,7 @@ export default function ClientsPage() {
                 placeholder="Телефон *" className="w-full bg-[#0A1F0A] border border-[#2A4A2A] rounded-xl px-3 py-2.5 text-sm text-[#F5F5F0] placeholder-[#8FAD8F] focus:outline-none focus:border-[#B5F23A]" />
               <input value={newUser.instagram} onChange={e => setNewUser(u => ({ ...u, instagram: e.target.value }))}
                 placeholder="Instagram" className="w-full bg-[#0A1F0A] border border-[#2A4A2A] rounded-xl px-3 py-2.5 text-sm text-[#F5F5F0] placeholder-[#8FAD8F] focus:outline-none focus:border-[#B5F23A]" />
-              <select value={newUser.tag} onChange={e => setNewUser(u => ({ ...u, tag: e.target.value }))}
+              <select value={newUser.tag} onChange={e => setNewUser(u => ({ ...u, tag: e.target.value as 'FAN'|'TEAM'|'CORPORATE'|'TOURNAMENT' }))}
                 className="w-full bg-[#0A1F0A] border border-[#2A4A2A] rounded-xl px-3 py-2.5 text-sm text-[#F5F5F0] focus:outline-none focus:border-[#B5F23A]">
                 {TAGS.slice(1).map(t => <option key={t} value={t}>{TAG_LABELS[t]}</option>)}
               </select>

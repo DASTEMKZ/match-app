@@ -1,5 +1,83 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
 
+const FALLBACK_ARENAS: Arena[] = [
+  {
+    id: 'arena-alpha',
+    name: 'Арена Альфа',
+    description: 'Современное крытое поле с искусственным покрытием',
+    city: 'Алматы',
+    size: '40×20',
+    surface: 'Искусственная трава',
+    lighting: true,
+    capacity: 10,
+    pricePerHour: 8000,
+    photos: JSON.stringify([]),
+    isActive: true,
+  },
+  {
+    id: 'arena-beta',
+    name: 'Арена Бета',
+    description: 'Открытое поле с натуральным газоном',
+    city: 'Алматы',
+    size: '50×30',
+    surface: 'Натуральная трава',
+    lighting: true,
+    capacity: 14,
+    pricePerHour: 6000,
+    photos: JSON.stringify([]),
+    isActive: true,
+  },
+  {
+    id: 'arena-gamma',
+    name: 'Арена Гамма',
+    description: 'Крытый мини-футбольный зал',
+    city: 'Алматы',
+    size: '30×15',
+    surface: 'Паркет',
+    lighting: true,
+    capacity: 8,
+    pricePerHour: 5000,
+    photos: JSON.stringify([]),
+    isActive: true,
+  },
+  {
+    id: 'arena-delta',
+    name: 'Арена Дельта',
+    description: 'VIP-поле с трибунами и раздевалками',
+    city: 'Алматы',
+    size: '60×40',
+    surface: 'Искусственная трава 5-го поколения',
+    lighting: true,
+    capacity: 22,
+    pricePerHour: 15000,
+    photos: JSON.stringify([]),
+    isActive: true,
+  },
+  {
+    id: 'air-arena-astana',
+    name: 'Air Arena',
+    description: 'Современное футбольное поле в г. Астана',
+    city: 'Астана',
+    size: '40×20',
+    surface: 'Искусственная трава',
+    lighting: true,
+    capacity: 10,
+    pricePerHour: 10000,
+    photos: JSON.stringify([]),
+    isActive: true,
+  },
+]
+
+function fallbackSchedule(arenaId: string, date: string): TimeSlot[] {
+  return Array.from({ length: 15 }, (_, i) => ({
+    id: `${arenaId}-${date}-${i + 8}`,
+    arenaId,
+    date,
+    hour: i + 8,
+    status: 'FREE',
+  }))
+}
+
 async function req<T>(path: string, opts?: RequestInit): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('match_token') : null
   const res = await fetch(`${BASE}${path}`, {
@@ -25,9 +103,14 @@ export const api = {
 
   // Arenas
   arenas: (params?: Record<string, string>) =>
-    req<Arena[]>(`/api/arenas${params ? '?' + new URLSearchParams(params) : ''}`),
-  arena: (id: string) => req<Arena>(`/api/arenas/${id}`),
-  arenaSchedule: (id: string, date: string) => req<TimeSlot[]>(`/api/arenas/${id}/schedule?date=${date}`),
+    req<Arena[]>(`/api/arenas${params ? '?' + new URLSearchParams(params) : ''}`).catch(() => FALLBACK_ARENAS),
+  arena: (id: string) => req<Arena>(`/api/arenas/${id}`).catch(() => {
+    const arena = FALLBACK_ARENAS.find(a => a.id === id)
+    if (!arena) throw new Error('Arena not found')
+    return arena
+  }),
+  arenaSchedule: (id: string, date: string) =>
+    req<TimeSlot[]>(`/api/arenas/${id}/schedule?date=${date}`).catch(() => fallbackSchedule(id, date)),
   createArena: (data: Partial<Arena>) => req<Arena>('/api/arenas', { method: 'POST', body: JSON.stringify(data) }),
   updateArena: (id: string, data: Partial<Arena>) => req<Arena>(`/api/arenas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
 
@@ -94,7 +177,7 @@ export interface User {
 
 export interface Arena {
   id: string; name: string; description?: string; size: string; surface: string
-  lighting: boolean; capacity: number; pricePerHour: number; photos: string; isActive: boolean
+  city?: string; lighting: boolean; capacity: number; pricePerHour: number; photos: string; isActive: boolean
 }
 
 export interface TimeSlot {

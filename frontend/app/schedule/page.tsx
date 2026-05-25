@@ -108,7 +108,10 @@ export default function SchedulePage() {
             ) : (
               arenas.map((arena, ai) => (
                 <tr key={arena.id} className={`border-b border-[#2A4A2A] ${ai % 2 === 0 ? '' : 'bg-[#0d2a0d]'}`}>
-                  <td className="px-4 py-3 font-medium text-[#F5F5F0] bg-[#1A3A1A] sticky left-0">{arena.name}</td>
+                  <td className="px-4 py-3 font-medium text-[#F5F5F0] bg-[#1A3A1A] sticky left-0">
+                    <div>{arena.name}</div>
+                    <div className="text-[10px] font-normal text-[#8FAD8F]">{arena.city || 'Алматы'}</div>
+                  </td>
                   {HOURS.map(hour => {
                     const slot = getSlot(arena.id, hour)
                     const style = slotStyle(slot)

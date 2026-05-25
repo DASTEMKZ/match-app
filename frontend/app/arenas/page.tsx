@@ -20,7 +20,10 @@ export default function ArenasPage() {
 
   useEffect(() => {
     let res = arenas
-    if (search) res = res.filter(a => a.name.toLowerCase().includes(search.toLowerCase()))
+    if (search) res = res.filter(a =>
+      a.name.toLowerCase().includes(search.toLowerCase()) ||
+      a.city?.toLowerCase().includes(search.toLowerCase())
+    )
     if (surface !== 'Все') res = res.filter(a => a.surface.includes(surface.split(' ')[0]))
     setFiltered(res)
   }, [search, surface, arenas])
@@ -30,7 +33,7 @@ export default function ArenasPage() {
       <div className="mb-10">
         <div className="text-xs font-semibold tracking-widest uppercase text-[#B5F23A] mb-2">Каталог</div>
         <h1 className="font-['Bebas_Neue'] text-5xl sm:text-6xl tracking-wide mb-4">Наши арены</h1>
-        <p className="text-[#8FAD8F]">{arenas.length} поля доступно для бронирования в Алматы</p>
+        <p className="text-[#8FAD8F]">{arenas.length} полей доступно для бронирования в Алматы и Астане</p>
       </div>
 
       {/* Filters */}
@@ -98,7 +101,10 @@ export default function ArenasPage() {
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="flex items-center gap-1 text-xs text-[#8FAD8F]">
-                      <MapPin size={11} /> {arena.size}
+                      <MapPin size={11} /> {arena.city || 'Алматы'}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs text-[#8FAD8F]">
+                      {arena.size}
                     </span>
                     <span className="flex items-center gap-1 text-xs text-[#8FAD8F]">
                       <Users size={11} /> {arena.capacity} чел.

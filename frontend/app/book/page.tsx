@@ -124,7 +124,7 @@ function BookForm() {
           <select value={form.arenaId} onChange={e => setForm(f => ({ ...f, arenaId: e.target.value }))}
             className="w-full bg-[#1A3A1A] border border-[#2A4A2A] rounded-xl px-3 py-2.5 text-sm text-[#F5F5F0] focus:outline-none focus:border-[#B5F23A]">
             <option value="">Выберите арену</option>
-            {arenas.map(a => <option key={a.id} value={a.id}>{a.name} — {formatMoney(a.pricePerHour)}/ч</option>)}
+            {arenas.map(a => <option key={a.id} value={a.id}>{a.name} · {a.city || 'Алматы'} — {formatMoney(a.pricePerHour)}/ч</option>)}
           </select>
         </div>
 
