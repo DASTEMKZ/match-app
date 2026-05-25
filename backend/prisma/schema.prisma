@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./match.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String
+  role      String   @default("CLIENT")
+  tag       String   @default("FAN")
+  instagram String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings      Booking[]
+  subscriptions Subscription[]
+}
+
+model Arena {
+  id           String  @id @default(cuid())
+  name         String
+  description  String?
+  size         String
+  surface      String
+  lighting     Boolean @default(true)
+  capacity     Int
+  pricePerHour Int
+  photos       String  @default("[]")
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+
+  bookings  Booking[]
+  timeSlots TimeSlot[]
+}
+
+model TimeSlot {
+  id        String  @id @default(cuid())
+  arenaId   String
+  date      String
+  hour      Int
+  status    String  @default("FREE")
+  bookingId String?
+
+  arena   Arena    @relation(fields: [arenaId], references: [id])
+  booking Booking? @relation(fields: [bookingId], references: [id])
+
+  @@unique([arenaId, date, hour])
+}
+
+model Booking {
+  id           String   @id @default(cuid())
+  arenaId      String
+  userId       String?
+  clientName   String
+  clientPhone  String
+  clientInsta  String?
+  clientType   String   @default("PRIVATE")
+  date         String
+  startHour    Int
+  duration     Int
+  totalAmount  Int
+  prepayAmount Int
+  discount     Int      @default(0)
+  status       String   @default("PENDING")
+  paymentRef   String?
+  notes        String?
+  contractUrl  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  arena     Arena      @relation(fields: [arenaId], references: [id])
+  user      User?      @relation(fields: [userId], references: [id])
+  timeSlots TimeSlot[]
+}
+
+model Subscription {
+  id            String   @id @default(cuid())
+  userId        String
+  arenaId       String?
+  type          String
+  totalSessions Int
+  usedSessions  Int      @default(0)
+  discount      Int      @default(10)
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  phone     String
+  channel   String
+  message   String
+  status    String    @default("pending")
+  sentAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model BotMessage {
+  id        String   @id @default(cuid())
+  channel   String
+  senderId  String
+  message   String
+  response  String?
+  createdAt DateTime @default(now())
+}
+
+model PromoCode {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  discount   Int
+  usageLimit Int       @default(100)
+  usedCount  Int       @default(0)
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+}
+
+model TournamentSlot {
+  id        String   @id @default(cuid())
+  name      String
+  date      String
+  arenas    String
+  maxTeams  Int
+  teams     String   @default("[]")
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+}
